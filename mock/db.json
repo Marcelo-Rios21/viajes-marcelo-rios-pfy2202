@@ -1,0 +1,44 @@
+{
+  "destinos": [
+    {
+      "id": 1,
+      "nombre": "Santiago",
+      "pais": "Chile",
+      "actividadesPopulares": [
+        "Visitar el Cerro San Cristóbal",
+        "Recorrer el centro histórico",
+        "Conocer el Cajón del Maipo"
+      ]
+    },
+    {
+      "id": 2,
+      "nombre": "Buenos Aires",
+      "pais": "Argentina",
+      "actividadesPopulares": [
+        "Recorrer Caminito",
+        "Visitar el Teatro Colón",
+        "Conocer Puerto Madero"
+      ]
+    },
+    {
+      "id": 3,
+      "nombre": "Lima",
+      "pais": "Perú",
+      "actividadesPopulares": [
+        "Recorrer Miraflores",
+        "Visitar el centro histórico",
+        "Conocer Barranco"
+      ]
+    },
+    {
+      "id": 4,
+      "nombre": "Río de Janeiro",
+      "pais": "Brasil",
+      "actividadesPopulares": [
+        "Visitar el Cristo Redentor",
+        "Conocer Copacabana",
+        "Subir al Pan de Azúcar"
+      ]
+    }
+  ]
+}
