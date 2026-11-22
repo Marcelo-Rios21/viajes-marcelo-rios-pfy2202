@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router'
+import { Link, useLocation,useParams } from 'react-router'
+import EstadoDisponibilidad from '../components/EstadoDisponibilidad.jsx'
 
 const consultaGraphQL = `
   query OpcionesDestino($id: ID!) {
@@ -29,6 +30,7 @@ const formatoPrecio = new Intl.NumberFormat('es-CL', {
 
 function DetalleDestino() {
   const { id } = useParams()
+  const { state } = useLocation()
   const [vuelos, setVuelos] = useState([])
   const [hoteles, setHoteles] = useState([])
   const [cargando, setCargando] = useState(true)
@@ -91,55 +93,93 @@ function DetalleDestino() {
   }, [id])
 
   return (
-    <section>
-      <h1>Detalle del destino</h1>
-      <p>Destino seleccionado: {id}</p>
+    <section className="pagina">
+      <div className="pagina-intro">
+        <h1>Vuelos y hoteles</h1>
+        <p>
+          Opciones de viaje para {state?.nombreDestino ?? 'este destino'}.
+        </p>
+      </div>
 
-      {cargando && <p>Cargando vuelos y hoteles...</p>}
+      {cargando && <p role="status">Cargando vuelos y hoteles...</p>}
 
       {error && <p role="alert">{error}</p>}
 
       {!cargando && !error && (
-        <>
-          <h2>Vuelos disponibles para consultar</h2>
+        <div className="secciones-opciones">
+          <section className="seccion-opciones">
+            <h2>Vuelos</h2>
 
-          {vuelos.length === 0 ? (
-            <p>No se encontraron vuelos para este destino.</p>
-          ) : (
-            <ul>
-              {vuelos.map((vuelo) => (
-                <li key={vuelo.id}>
-                  <h3>{vuelo.aerolinea}</h3>
-                  <p>Precio: {formatoPrecio.format(vuelo.precio)}</p>
-                  <p>Salida: {vuelo.fechaSalida}</p>
-                  <p>Llegada: {vuelo.fechaLlegada}</p>
-                  <p>Disponibilidad: {vuelo.disponible ? 'Disponible' : 'No disponible'}</p>
-                </li>
-              ))}
-            </ul>
-          )}
+            {vuelos.length === 0 ? (
+              <p>No se encontraron vuelos para este destino.</p>
+            ) : (
+              <ul className="tarjetas-grid">
+                {vuelos.map((vuelo) => (
+                  <li key={vuelo.id} className="tarjeta">
+                    <div className="opcion-cabecera">
+                      <h3 className="opcion-nombre">{vuelo.aerolinea}</h3>
+                      <EstadoDisponibilidad disponible={vuelo.disponible} />
+                    </div>
 
-          <h2>Hoteles</h2>
+                    <dl className="opcion-datos">
+                      <div>
+                        <dt>Precio</dt>
+                        <dd>{formatoPrecio.format(vuelo.precio)}</dd>
+                      </div>
+                      <div>
+                        <dt>Fecha de salida</dt>
+                        <dd>{vuelo.fechaSalida}</dd>
+                      </div>
+                      <div>
+                        <dt>Fecha de llegada</dt>
+                        <dd>{vuelo.fechaLlegada}</dd>
+                      </div>
+                    </dl>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
 
-          {hoteles.length === 0 ? (
-            <p>No se encontraron hoteles para este destino.</p>
-          ) : (
-            <ul>
-              {hoteles.map((hotel) => (
-                <li key={hotel.id}>
-                  <h3>{hotel.nombre}</h3>
-                  <p>Precio por noche: {formatoPrecio.format(hotel.precioPorNoche)}</p>
-                  <p>Entrada: {hotel.fechaEntrada}</p>
-                  <p>Salida: {hotel.fechaSalida}</p>
-                  <p>Disponibilidad: {hotel.disponible ? 'Disponible' : 'No disponible'}</p>
-                </li>
-              ))}
-            </ul>
-          )}
-        </>
+          <section className="seccion-opciones">
+            <h2>Hoteles</h2>
+
+            {hoteles.length === 0 ? (
+              <p>No se encontraron hoteles para este destino.</p>
+            ) : (
+              <ul className="tarjetas-grid">
+                {hoteles.map((hotel) => (
+                  <li key={hotel.id} className="tarjeta">
+                    <div className="opcion-cabecera">
+                      <h3 className="opcion-nombre">{hotel.nombre}</h3>
+                      <EstadoDisponibilidad disponible={hotel.disponible} />
+                    </div>
+
+                    <dl className="opcion-datos">
+                      <div>
+                        <dt>Precio por noche</dt>
+                        <dd>{formatoPrecio.format(hotel.precioPorNoche)}</dd>
+                      </div>
+                      <div>
+                        <dt>Fecha de entrada</dt>
+                        <dd>{hotel.fechaEntrada}</dd>
+                      </div>
+                      <div>
+                        <dt>Fecha de salida</dt>
+                        <dd>{hotel.fechaSalida}</dd>
+                      </div>
+                    </dl>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        </div>
       )}
 
-      <Link to="/">Volver a destinos</Link>
+      <Link className="enlace-volver" to="/">
+        Volver a destinos
+      </Link>
     </section>
   )
 }

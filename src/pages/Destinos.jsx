@@ -43,10 +43,13 @@ function Destinos() {
   }, [])
 
   return (
-    <section>
-      <h1>Destinos disponibles</h1>
+    <section className="pagina">
+      <div className="pagina-intro">
+        <h1>Destinos disponibles</h1>
+        <p>Explora nuestros destinos y descubre sus actividades populares.</p>
+      </div>
 
-      {cargando && <p>Cargando destinos...</p>}
+      {cargando && <p role="status">Cargando destinos...</p>}
 
       {error && <p role="alert">{error}</p>}
 
@@ -55,20 +58,24 @@ function Destinos() {
       )}
 
       {!cargando && !error && destinos.length > 0 && (
-        <ul>
+        <ul className="tarjetas-grid">
           {destinos.map((destino) => (
-            <li key={destino.id}>
+            <li key={destino.id} className="tarjeta">
               <h2>{destino.nombre}</h2>
-              <p>País: {destino.pais}</p>
+              <p className="tarjeta-subtitulo">{destino.pais}</p>
 
               <h3>Actividades populares</h3>
-              <ul>
+              <ul className="actividades-lista">
                 {destino.actividadesPopulares.map((actividad) => (
                   <li key={actividad}>{actividad}</li>
                 ))}
               </ul>
 
-              <Link to={`/destinos/${destino.id}`}>
+              <Link
+                className="enlace-boton"
+                to={`/destinos/${destino.id}`}
+                state={{ nombreDestino: destino.nombre }}
+              >
                 Ver detalle del destino
               </Link>
             </li>
