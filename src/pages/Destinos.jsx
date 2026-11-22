@@ -11,7 +11,7 @@ function Destinos() {
 
     async function cargarDestinos() {
       try {
-        const respuesta = await fetch('http://localhost:3000/destinos', {
+        const respuesta = await fetch(import.meta.env.VITE_API_BASE_URL + '/destinos', {
           signal: controller.signal,
         })
 

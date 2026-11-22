@@ -1,4 +1,5 @@
-import { createServer } from 'node:http'
+import jsonServer from 'json-server'
+import { fileURLToPath } from 'node:url'
 import { createSchema, createYoga } from 'graphql-yoga'
 import { vuelos, hoteles } from './graphql-data.js'
 
@@ -40,9 +41,29 @@ const schema = createSchema({
   },
 })
 
+const app = jsonServer.create()
 const yoga = createYoga({ schema })
-const server = createServer(yoga)
 
-server.listen(4000, () => {
-  console.log('GraphQL disponible en http://localhost:4000/graphql')
+const router = jsonServer.router(
+  fileURLToPath(new URL('./db.json', import.meta.url)),
+)
+
+app.use(jsonServer.defaults())
+app.use(yoga.graphqlEndpoint, yoga)
+
+app.use((req, res, next) => {
+  if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
+    return next()
+  }
+
+  return res.status(405).json({ error: 'Metodo no permitido' })
+})
+
+app.use(router)
+
+const port = Number(process.env.PORT) || 4000
+
+app.listen(port, '0.0.0.0', () => {
+  console.log(`REST: http://localhost:${port}/destinos`)
+  console.log(`GraphQL: http://localhost:${port}/graphql`)
 })

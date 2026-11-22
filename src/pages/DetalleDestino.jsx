@@ -46,7 +46,7 @@ function DetalleDestino() {
       setHoteles([])
 
       try {
-        const respuesta = await fetch('http://localhost:4000/graphql', {
+        const respuesta = await fetch(import.meta.env.VITE_API_BASE_URL + '/graphql', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
